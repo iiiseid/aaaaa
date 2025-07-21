@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Çay Təklifi Simulyatoru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ürəklərin animasiyası üçün */
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            font-size: 2rem;
+            animation: floatUp 5s linear infinite;
+            user-select: none; /* Ürəklərin seçilməsinin qarşısını alır */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-pink-200 to-rose-300 min-h-screen flex items-center justify-center overflow-hidden font-serif">
+
+    <div id="container" class="text-center p-8 relative">
+        <h1 id="question" class="text-4xl md:text-6xl text-rose-800 font-bold mb-8 transition-opacity duration-500">
+            Mənimlə çay içərsən?
+        </h1>
+        <div id="buttons" class="flex flex-row sm:flex-col gap-4 justify-around items-center transition-opacity duration-500">
+            <button id="yesButton" class="bg-rose-500 text-white font-bold py-3 px-10 rounded-full shadow-lg transform hover:scale-110 transition-transform duration-300 ease-in-out">
+                Həəəə
+            </button>
+            <button id="noButton" class="bg-gray-200 text-gray-700 font-bold py-3 px-10 rounded-full shadow-lg absolute top-[180px] transition-all duration-200 ease-out">
+                Yooox
+            </button>
+        </div>
+    </div>
+    
+    <div id="successMessage" class="text-center p-8 hidden">
+        <h1 class="text-5xl md:text-7xl text-rose-900 font-bold">
+            Bilirdim!
+        </h1>
+    </div>
+
+    <div id="heart-container"></div>
+
+<script>
+    const noButton = document.getElementById('noButton');
+    const yesButton = document.getElementById('yesButton');
+    const container = document.getElementById('container');
+    const question = document.getElementById('question');
+    const buttons = document.getElementById('buttons');
+    const successMessage = document.getElementById('successMessage');
+    const heartContainer = document.getElementById('heart-container');
+
+    // "Yox" düyməsini qaçıran funksiya
+    noButton.addEventListener('mouseover', () => {
+        const containerRect = document.body.getBoundingClientRect();
+        const buttonRect = noButton.getBoundingClientRect();
+        
+        const newTop = Math.random() * (containerRect.height - buttonRect.height);
+        const newLeft = Math.random() * (containerRect.width - buttonRect.width);
+        
+        noButton.style.top = `${newTop}px`;
+        noButton.style.left = `${newLeft}px`;
+    });
+    
+    // "Hə" düyməsinə basıldıqda baş verənlər
+    yesButton.addEventListener('click', () => {
+        // Sualı və düymələri gizlət
+        question.style.opacity = '0';
+        buttons.style.opacity = '0';
+
+        setTimeout(() => {
+            container.classList.add('hidden');
+            successMessage.classList.remove('hidden');
+            createHearts();
+        }, 500); // Gözəl keçid üçün yarım saniyə gözlə
+    });
+
+    // Uçuşan ürəkləri yaradan funksiya
+    function createHearts() {
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.innerText = '❤️';
+            heart.classList.add('heart');
+            
+            // Ürəyin başlanğıc mövqeyi və ölçüsü
+            heart.style.left = `${Math.random() * 100}vw`;
+            heart.style.fontSize = `${Math.random() * 2 + 1}rem`; // 1rem-dən 3rem-ə qədər ölçü
+            heart.style.animationDuration = `${Math.random() * 3 + 4}s`; // 4-7 saniyə arası sürət
+            
+            heartContainer.appendChild(heart);
+
+            // Ürək animasiyası bitdikdən sonra onu DOM-dan sil
+            setTimeout(() => {
+                heart.remove();
+            }, 7000); // Animasiya müddətindən bir az çox
+
+        }, 200); // Hər 200ms-dən bir yeni ürək yaranır
+    }
+
+</script>
+
+</body>
+</html>
